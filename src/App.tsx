@@ -2,6 +2,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import AppRouter from './components/Approuter';
 import { store } from './store/store';
+import 'antd/dist/antd.css';
 
 function App() {
   return (

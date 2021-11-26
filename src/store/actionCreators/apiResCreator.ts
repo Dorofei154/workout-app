@@ -1,8 +1,8 @@
 import { ACTIONS } from '../../constants/actions';
 
-export const newTodoCreator = (e: any) => {
+export const apiResCreator = (e: any) => {
   return {
-    type: ACTIONS.SET_NEW_TODO,
+    type: ACTIONS.SET_API_RES,
     value: e
   };
 };

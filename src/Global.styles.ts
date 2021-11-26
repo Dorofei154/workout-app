@@ -11,20 +11,37 @@ export const S = {
   `,
   Wrapper: styled.div`
     display: flex;
+    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    & button {
-      font-size: 20px;
-      padding-bottom: 35px;
-    }
+  `,
+  WrapperGroup: styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 60vw;
+  `,
+  WrapperLoader: styled.div`
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `,
+  WrapperList: styled.div`
+    display: flex;
+    align-items: left;
+    margin-left: 10px;
+    flex-direction: column;
+    justify-content: center;
   `,
   List: styled.li`
-    list-style-type: none;
+    display: flex;
   `,
   Section: styled.section`
     list-style-type: none;
   `,
   Ul: styled.ul`
     list-style-type: none;
+    padding: 0;
   `,
   Div: styled.div`
     padding: 10px 20px;
@@ -36,7 +53,49 @@ export const S = {
       cursor: pointer;
     }
   `,
-  Span: styled.span``,
+  ButtonStartWorkout: styled.button`
+    position: sticky;
+    width: 60vw;
+    bottom: 2vh;
+    background: #aa00ff;
+    border: none;
+    color: #ffffff;
+    padding: 2vh 0;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: center;
+    text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
+    box-shadow: 0px 16px 32px rgba(170, 0, 255, 0.24);
+    border-radius: 8px;
+    margin-bottom: 2vh;
+    cursor: pointer;
+  `,
+  Img: styled.img`
+    height: 5vw;
+    width: auto;
+    margin-top: 1vh;
+  `,
+  ImgMain: styled.img`
+    margin: 2vh 0;
+    height: auto;
+    width: 60vw;
+  `,
+  H3: styled.h3`
+    font-size: 20px;
+    margin: 1vh 0;
+  `,
+  H2: styled.h2``,
+  H1: styled.h1`
+    margin: 1vh 0;
+  `,
+  Span: styled.span`
+    font-size: 14px;
+    line-height: 20px;
+    color: #212121;
+  `,
   Container: styled.div`
     display: flex;
     flex-direction: column;

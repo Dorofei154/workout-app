@@ -1,8 +1,8 @@
 import { ACTIONS } from '../../constants/actions';
 
-export const arrtodoCreator = (e: any) => {
+export const warmUpCreator = (e: any) => {
   return {
-    type: ACTIONS.SET_ARRTODO,
+    type: ACTIONS.SET_WARM_UP,
     value: e
   };
 };
