@@ -4,7 +4,6 @@ import { S } from '../../Global.styles';
 
 const StratchingGroup = (props: any) => {
   const state = useSelector((state: any) => state);
-  console.log(state);
   if (
     !state?.exersice?.exercises ||
     !state?.warmUp?.exercises ||

@@ -8,6 +8,8 @@ import { WarmUpGroupContainer } from '../WarmUpGroup/WarmUpGroup';
 import MainImg from '../../img/image.png';
 import { HeaderOverviewContainer } from '../HeaderOverview/HeaderOverview';
 import { Space, Spin } from 'antd';
+import { useHistory } from 'react-router';
+import { ROUTES } from '../../constants/constants';
 
 const Overview = () => {
   const dispatch = useDispatch();
@@ -15,7 +17,8 @@ const Overview = () => {
   const onSomeButtonClicked = useCallback(() => {
     dispatch(sagaCreator());
   }, [dispatch]);
-
+  console.log(state);
+  const history = useHistory();
   useEffect(() => {
     onSomeButtonClicked();
   }, [onSomeButtonClicked]);
@@ -39,7 +42,11 @@ const Overview = () => {
       <ExersiceGroupContainer />
       <StratchingGroupContainer />
       <WarmUpGroupContainer />
-      <S.ButtonStartWorkout onClick={() => console.log(state)}>
+      <S.ButtonStartWorkout
+        onClick={() =>
+          history.push({ pathname: ROUTES.WORKOUT_ROUTE, state: state })
+        }
+      >
         Start Workout
       </S.ButtonStartWorkout>
     </S.Wrapper>

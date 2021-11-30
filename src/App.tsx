@@ -1,15 +1,15 @@
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router';
 import AppRouter from './components/Approuter';
-import { store } from './store/store';
+import { store, history } from './store/store';
 import 'antd/dist/antd.css';
 
 function App() {
   return (
     <Provider store={store}>
-      <Router>
+      <ConnectedRouter history={history}>
         <AppRouter />
-      </Router>
+      </ConnectedRouter>
     </Provider>
   );
 }

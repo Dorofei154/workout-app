@@ -15,6 +15,21 @@ export const S = {
     flex-direction: column;
     justify-content: center;
   `,
+  ArrowButton: styled.button`
+    border: 2px solid #aa00ff;
+    box-sizing: border-box;
+    border-radius: 8px;
+    background: none;
+    cursor: pointer;
+    height: 48px;
+    width: 74px;
+  `,
+  WrapperWorkoutHeader: styled.div`
+    display: flex;
+    width: 60vw;
+    justify-content: space-around;
+    align-items: baseline;
+  `,
   WrapperGroup: styled.div`
     display: flex;
     flex-direction: column;
@@ -83,9 +98,23 @@ export const S = {
     height: auto;
     width: 60vw;
   `,
+  ImgWorkout: styled.img`
+    margin: 2vh 0;
+    height: 30vw;
+    width: 40vw;
+  `,
+  VideoWorkout: styled.video``,
+  ButtonStop: styled.button`
+    border-radius: 1000px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    width: 20px;
+  `,
   H3: styled.h3`
     font-size: 20px;
     margin: 1vh 0;
+    border-top: 1px solid #eeeeee;
   `,
   H2: styled.h2``,
   H1: styled.h1`

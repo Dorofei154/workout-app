@@ -3,7 +3,6 @@ import { S } from '../../Global.styles';
 
 const ExersiceGroup = (props: any) => {
   const state = useSelector((state: any) => state);
-  console.log(state);
   if (
     !state?.exersice?.exercises ||
     !state?.warmUp?.exercises ||
