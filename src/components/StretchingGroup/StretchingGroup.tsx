@@ -1,9 +1,11 @@
 import 'antd/dist/antd.css';
+import { Store } from 'antd/lib/form/interface';
 import { useSelector } from 'react-redux';
 import { S } from '../../Global.styles';
+import { MyType } from '../Workout/Workout.types';
 
-const StratchingGroup = (props: any) => {
-  const state = useSelector((state: any) => state);
+const StratchingGroup = () => {
+  const state = useSelector((state: Store) => state);
   if (
     !state?.exersice?.exercises ||
     !state?.warmUp?.exercises ||
@@ -15,9 +17,9 @@ const StratchingGroup = (props: any) => {
     <S.WrapperGroup>
       <S.H3>{state.stretching.title}</S.H3>
       <S.Ul>
-        {state.stretching.exercises.map((item: any) => {
+        {state.stretching.exercises.map((item: MyType, index: number) => {
           return (
-            <S.List>
+            <S.List key={index}>
               <S.Img src={item.photo} alt="#" />
               <S.WrapperList>
                 <S.H2>{item.title}</S.H2>

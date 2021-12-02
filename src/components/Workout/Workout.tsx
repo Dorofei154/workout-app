@@ -8,28 +8,33 @@ import PlayButton from '../../img/Play.png';
 import ArrowButtonLeft from '../../img/Vector1.png';
 import { indexItemCreator } from '../../store/actionCreators/indexItemCreator';
 import { secondsCreator } from '../../store/actionCreators/secondsCreator';
-import { CONSTANTS } from '../../constants/constants';
+import { CONSTANTS, ROUTES } from '../../constants/constants';
 import { statusTimerCreator } from '../../store/actionCreators/statusTimerCreator';
 import ReactPlayer from 'react-player';
+import { useHistory } from 'react-router';
+import { doneCreator } from '../../store/actionCreators/doneCreator';
 import { getReadyCreator } from '../../store/actionCreators/getReadyCreator';
-import { sagaCreator } from '../../store/actionCreators/sagaCreator';
+import { MyType } from './Workout.types';
+import { Store } from 'antd/lib/form/interface';
 
 const Workout = () => {
   const dispatch = useDispatch();
-
-  const states = useSelector((state: any) => state);
+  const history = useHistory();
+  const states = useSelector((state: Store) => state);
   const setSeconds = useCallback(
-    (e: any) => {
+    (e: number) => {
       dispatch(secondsCreator(e));
     },
     [dispatch]
   );
+
   const setStatusTimer = useCallback(
     (e: string) => {
       dispatch(statusTimerCreator(e));
     },
     [dispatch]
   );
+  console.log(states);
 
   const setGetReady = useCallback(() => {
     dispatch(getReadyCreator(!states.isGetReady));
@@ -38,28 +43,33 @@ const Workout = () => {
   const setIndexItemPlus = useCallback(() => {
     dispatch(indexItemCreator(states.indexItem + 1));
   }, [dispatch, states.indexItem]);
+
   const setIndexItemMinus = useCallback(() => {
     dispatch(indexItemCreator(states.indexItem - 1));
   }, [dispatch, states.indexItem]);
 
-  const onSomeButtonClicked = useCallback(() => {
-    dispatch(sagaCreator());
-  }, [dispatch]);
+  const setDone = useCallback(
+    (e) => {
+      dispatch(doneCreator(e));
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    onSomeButtonClicked();
-
     if (states.statusTimer === CONSTANTS.WORKING && !states.isGetReady) {
       interval = setInterval(() => {
         setSeconds(states.seconds - 1);
       }, 1000);
+
       if (
         states.seconds <= 0 &&
-        states.indexItem <= states.router.location.state.arrayOfExercises.length
+        states.indexItem <= states.router.location.state.length
       ) {
+        console.log(states);
         setIndexItemPlus();
         setGetReady();
+        setDone(states.router.location.state[states.indexItem]);
         setSeconds(5);
         clearInterval(interval);
       }
@@ -70,13 +80,10 @@ const Workout = () => {
       }, 1000);
       if (
         states.seconds <= 0 &&
-        states.indexItem <= states.router.location.state.arrayOfExercises.length
+        states.indexItem <= states.router.location.state.length
       ) {
         setGetReady();
-        setSeconds(
-          states.router.location.state.arrayOfExercises[states.indexItem]
-            .duration
-        );
+        setSeconds(states.router.location.state[states.indexItem].duration);
         clearInterval(interval);
       }
     }
@@ -84,120 +91,57 @@ const Workout = () => {
       return clearInterval(interval);
     };
   }, [
-    onSomeButtonClicked,
+    setDone,
     setGetReady,
     setIndexItemPlus,
     setSeconds,
-    states.indexItem,
-    states.isGetReady,
-    states.router.location.state.arrayOfExercises,
-    states.router.location.state.arrayOfExercises.length,
-    states.seconds,
-    states.statusTimer
+    states,
+    states.seconds
   ]);
 
   return (
     <S.Wrapper>
-      {
+      {states.router.location.state.map(
         // eslint-disable-next-line array-callback-return
-        states.router.location.state.arrayOfExercises.map(
-          (item: any, index: string) => {
-            if (index === states.indexItem) {
-              if (states.isGetReady) {
-                return (
-                  <S.Wrapper>
-                    <S.H1>Get Ready</S.H1>
-                    <S.WrapperWorkoutHeader>
-                      {states.indexItem ? (
-                        <S.ArrowButton
-                          onClick={() => {
-                            setSeconds(
-                              states.router.location.state.arrayOfExercises[
-                                states.indexItem - 1
-                              ].duration
-                            );
-                            setGetReady();
-                            setIndexItemMinus();
-                          }}
-                        >
-                          <img src={ArrowButtonLeft} alt="" />
-                        </S.ArrowButton>
-                      ) : (
-                        <div style={{ width: 74 }}></div>
-                      )}
-                      <Progress
-                        type="circle"
-                        key={index}
-                        width={200}
-                        strokeColor="#24BB0C"
-                        strokeWidth={6}
-                        percent={states.seconds * 20}
-                        format={() => `${states.seconds}`}
-                      />
-                      <S.ArrowButton
-                        onClick={() => {
-                          setGetReady();
-                          setSeconds(
-                            states.router.location.state.arrayOfExercises[
-                              states.indexItem
-                            ].duration
-                          );
-                        }}
-                      >
-                        <img src={ArrowButtonRight} alt="" />
-                      </S.ArrowButton>
-                    </S.WrapperWorkoutHeader>
-                    <ReactPlayer
-                      playing={
-                        states.statusTimer === CONSTANTS.WORKING ? true : false
-                      }
-                      loop
-                      url={item.video}
-                    ></ReactPlayer>
-                    <img
-                      onClick={() => {
-                        states.statusTimer === CONSTANTS.WORKING
-                          ? setStatusTimer(CONSTANTS.PAUSED)
-                          : setStatusTimer(CONSTANTS.WORKING);
-                      }}
-                      src={
-                        states.statusTimer === CONSTANTS.WORKING
-                          ? StopButton
-                          : PlayButton
-                      }
-                      alt=""
-                    />
-                  </S.Wrapper>
-                );
-              }
-              console.log(item.duration, states.seconds);
+        (item: MyType, index: string) => {
+          if (index === states.indexItem) {
+            if (states.isGetReady) {
               return (
                 <S.Wrapper>
-                  <S.H1>{item.title}</S.H1>
+                  <S.H1>Get Ready</S.H1>
                   <S.WrapperWorkoutHeader>
-                    <S.ArrowButton
-                      onClick={() => {
-                        setGetReady();
-                        setSeconds(5);
-                      }}
-                    >
-                      <img src={ArrowButtonLeft} alt="" />
-                    </S.ArrowButton>
-
+                    {states.indexItem ? (
+                      <S.ArrowButton
+                        onClick={() => {
+                          setSeconds(
+                            states.router.location.state[states.indexItem - 1]
+                              .duration
+                          );
+                          setGetReady();
+                          setIndexItemMinus();
+                        }}
+                      >
+                        <img src={ArrowButtonLeft} alt="" />
+                      </S.ArrowButton>
+                    ) : (
+                      <div style={{ width: 74 }}></div>
+                    )}
                     <Progress
                       type="circle"
                       key={index}
                       width={200}
-                      strokeColor="#24BB0C"
+                      strokeColor="#1DE9B6"
                       strokeWidth={6}
-                      percent={states.seconds * (100 / item.duration)}
+                      percent={states.seconds * 20}
                       format={() => `${states.seconds}`}
                     />
                     <S.ArrowButton
                       onClick={() => {
-                        setSeconds(5);
                         setGetReady();
-                        setIndexItemPlus();
+                        setSeconds(
+                          states.router.location.state[states.indexItem]
+                            .duration
+                        );
                       }}
                     >
                       <img src={ArrowButtonRight} alt="" />
@@ -226,40 +170,72 @@ const Workout = () => {
                 </S.Wrapper>
               );
             }
+            return (
+              <S.Wrapper>
+                <S.H1>{item.title}</S.H1>
+                <S.WrapperWorkoutHeader>
+                  <S.ArrowButton
+                    onClick={() => {
+                      setGetReady();
+                      setSeconds(5);
+                    }}
+                  >
+                    <img src={ArrowButtonLeft} alt="" />
+                  </S.ArrowButton>
 
-            // return <Progress type="circle" key={index} width={200} strokeWidth={6} percent={states.seconds*3.3} format={() => `${states.seconds}`} />
+                  <Progress
+                    type="circle"
+                    key={index}
+                    width={200}
+                    strokeColor="#1DE9B6"
+                    strokeWidth={6}
+                    percent={states.seconds * (100 / item.duration)}
+                    format={() => `${states.seconds}`}
+                  />
+                  <S.ArrowButton
+                    onClick={() => {
+                      if (
+                        states.indexItem ===
+                        states.router.location.state.length - 1
+                      ) {
+                        return history.push({
+                          pathname: ROUTES.COMPLETE_ROUTE,
+                          state: states
+                        });
+                      }
+                      setSeconds(5);
+                      setGetReady();
+                      setIndexItemPlus();
+                    }}
+                  >
+                    <img src={ArrowButtonRight} alt="" />
+                  </S.ArrowButton>
+                </S.WrapperWorkoutHeader>
+                <ReactPlayer
+                  playing={
+                    states.statusTimer === CONSTANTS.WORKING ? true : false
+                  }
+                  loop
+                  url={item.video}
+                ></ReactPlayer>
+                <img
+                  onClick={() => {
+                    states.statusTimer === CONSTANTS.WORKING
+                      ? setStatusTimer(CONSTANTS.PAUSED)
+                      : setStatusTimer(CONSTANTS.WORKING);
+                  }}
+                  src={
+                    states.statusTimer === CONSTANTS.WORKING
+                      ? StopButton
+                      : PlayButton
+                  }
+                  alt=""
+                />
+              </S.Wrapper>
+            );
           }
-        )
-        // [exersice,stretching,warmUp].map((item:any)=> {
-        //  return item.exercises.map((item:any)=>{
-        //   const res = item.duration;
-        //   const interval = setInterval(() => {
-        //     item.duration = res - 1;
-        //   }, 1000);
-        //   if (item.duration < 0) {
-        //     clearInterval(interval);
-        //   }
-
-        //     return (
-        //       <S.WrapperWorkoutHeader>
-        //         <div style={{width:74}}></div>
-        //        <Progress type="circle" width={200} strokeWidth={6} percent={item.duration*3.3} format={() => `${item.duration}`} />
-        //       <S.ArrowButton onClick={()=>console.log(exersice)} ><img src={ArrowButton} alt="" /></S.ArrowButton>
-        //       </S.WrapperWorkoutHeader>
-        //     )
-        //   })
-        // })
-      }
-
-      {/* <S.H1>Get ready</S.H1>
-   
-   <S.WrapperWorkoutHeader>
-     <div style={{width:74}}></div>
-   <Progress type="circle" width={200} strokeWidth={6} percent={seconds*20} format={() => `${seconds}`} />
-    </S.WrapperWorkoutHeader>
-
-    
-    <S.ImgWorkout src={exersice.muscle_group.photo}/> */}
+        }
+      )}
     </S.Wrapper>
   );
 };

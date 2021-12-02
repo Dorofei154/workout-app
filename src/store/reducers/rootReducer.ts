@@ -2,6 +2,12 @@ import { combineReducers } from 'redux';
 import { ACTIONS } from '../../constants/actions';
 import { CONSTANTS } from '../../constants/constants';
 import { connectRouter } from 'connected-react-router';
+import {
+  ActionBoolean,
+  ActionNumber,
+  ActionString
+} from '../actionCreators/actionTypes';
+import { MyType } from '../../components/Workout/Workout.types';
 
 const reducerExersice = (state = {}, action: any) => {
   switch (action.type) {
@@ -27,7 +33,7 @@ const reducerStretching = (state = {}, action: any) => {
       return state;
   }
 };
-const reducerIndexItem = (state = 0, action: any) => {
+const reducerIndexItem = (state = 0, action: ActionNumber) => {
   switch (action.type) {
     case ACTIONS.SET_INDEX_ITEM:
       return action.value;
@@ -35,7 +41,7 @@ const reducerIndexItem = (state = 0, action: any) => {
       return state;
   }
 };
-const reducerSeconds = (state = 5, action: any) => {
+const reducerSeconds = (state = 5, action: ActionNumber) => {
   switch (action.type) {
     case ACTIONS.SET_SECONDS:
       return action.value;
@@ -44,7 +50,7 @@ const reducerSeconds = (state = 5, action: any) => {
   }
 };
 
-const reducerStatusTimer = (state = CONSTANTS.PAUSED, action: any) => {
+const reducerStatusTimer = (state = CONSTANTS.PAUSED, action: ActionString) => {
   switch (action.type) {
     case ACTIONS.SET_STATUS_TIMER:
       return action.value;
@@ -53,7 +59,7 @@ const reducerStatusTimer = (state = CONSTANTS.PAUSED, action: any) => {
   }
 };
 
-const reducerGetReady = (state = true, action: any) => {
+const reducerGetReady = (state = true, action: ActionBoolean) => {
   switch (action.type) {
     case ACTIONS.SET_GET_READY:
       return action.value;
@@ -62,45 +68,17 @@ const reducerGetReady = (state = true, action: any) => {
   }
 };
 
-const reducerSecondsGetReady = (state = true, action: any) => {
-  switch (action.type) {
-    case ACTIONS.SET_GET_READY:
-      return action.value;
-    default:
-      return state;
-  }
-};
-
-const reducerStretchingSeconds = (state: number[] = [], action: any) => {
-  switch (action.type) {
-    case ACTIONS.SET_SECONDS_STRETCHING:
-      return action.value;
-    default:
-      return state;
-  }
-};
-
-const reducerWarmUpSeconds = (state: number[] = [], action: any) => {
-  switch (action.type) {
-    case ACTIONS.SET_SECONDS_WARM_UP:
-      return action.value;
-    default:
-      return state;
-  }
-};
-
-const reducerExcersiceSeconds = (state: number[] = [], action: any) => {
-  switch (action.type) {
-    case ACTIONS.SET_SECONDS_EXERSICES:
-      return action.value;
-    default:
-      return state;
-  }
-};
-const reducerArrayOfExercises = (state: number[] = [], action: any) => {
+const reducerArrayOfExercises = (state: MyType[] = [], action: any) => {
   switch (action.type) {
     case ACTIONS.SET_ARRAY_OF_EXERCISES:
       return action.value;
+    case ACTIONS.SET_DONE:
+      return state.map((item: any) => {
+        if (item.id === action.value.id) {
+          return { ...item, done: true };
+        }
+        return item;
+      });
     default:
       return state;
   }
@@ -114,11 +92,7 @@ export const rootReducer = (history: any) =>
     stretching: reducerStretching,
     indexItem: reducerIndexItem,
     seconds: reducerSeconds,
-    secondsGetReady: reducerSecondsGetReady,
     statusTimer: reducerStatusTimer,
     isGetReady: reducerGetReady,
-    secondsStretching: reducerStretchingSeconds,
-    secondsExercise: reducerExcersiceSeconds,
-    secondsWarmUp: reducerWarmUpSeconds,
     arrayOfExercises: reducerArrayOfExercises
   });

@@ -10,18 +10,20 @@ import { HeaderOverviewContainer } from '../HeaderOverview/HeaderOverview';
 import { Space, Spin } from 'antd';
 import { useHistory } from 'react-router';
 import { ROUTES } from '../../constants/constants';
+import { Store } from 'antd/lib/form/interface';
 
 const Overview = () => {
   const dispatch = useDispatch();
-  const state = useSelector((state: any) => state);
-  const onSomeButtonClicked = useCallback(() => {
+  const state = useSelector((state: Store) => state);
+  const sagaLoader = useCallback(() => {
     dispatch(sagaCreator());
   }, [dispatch]);
-  console.log(state);
   const history = useHistory();
+
   useEffect(() => {
-    onSomeButtonClicked();
-  }, [onSomeButtonClicked]);
+    sagaLoader();
+  }, [sagaLoader]);
+
   if (
     !state?.exersice?.exercises ||
     !state?.warmUp?.exercises ||
@@ -44,7 +46,10 @@ const Overview = () => {
       <WarmUpGroupContainer />
       <S.ButtonStartWorkout
         onClick={() =>
-          history.push({ pathname: ROUTES.WORKOUT_ROUTE, state: state })
+          history.push({
+            pathname: ROUTES.WORKOUT_ROUTE,
+            state: state.arrayOfExercises
+          })
         }
       >
         Start Workout

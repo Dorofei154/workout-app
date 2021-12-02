@@ -1,8 +1,8 @@
 import { ACTIONS } from '../../constants/actions';
 
-export const getReadyCreator = (e: boolean) => {
+export const doneCreator = (e: string) => {
   return {
-    type: ACTIONS.SET_GET_READY,
+    type: ACTIONS.SET_DONE,
     value: e
   };
 };

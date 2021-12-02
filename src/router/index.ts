@@ -1,9 +1,9 @@
 import { OverviewContainer } from '../components/Overview/Overview';
 import { WorkoutContainer } from '../components/Workout/Workout';
-import { CompliteContainer } from '../components/Complite/Complite';
+import { CompleteContainer } from '../components/Complete/Complete';
 import { ROUTES } from '../constants/constants';
 
-const { OVERVIEW_ROUTE, WORKOUT_ROUTE, COMPLITE_ROUTE } = ROUTES;
+const { OVERVIEW_ROUTE, WORKOUT_ROUTE, COMPLETE_ROUTE } = ROUTES;
 
 const routes = [
   {
@@ -15,8 +15,8 @@ const routes = [
     Component: WorkoutContainer
   },
   {
-    path: COMPLITE_ROUTE,
-    Component: CompliteContainer
+    path: COMPLETE_ROUTE,
+    Component: CompleteContainer
   }
 ];
 
