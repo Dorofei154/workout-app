@@ -7,11 +7,22 @@ export interface MyType {
   video: string;
 }
 
+export interface MyTypeWithout {
+  id?: string;
+  done?: boolean;
+  title: string;
+  duration: number;
+  description: string;
+  select?: string | undefined;
+  video?: string;
+  photo?: string;
+}
+
 export interface ExercisesWithDone extends MyType {
   done: boolean;
 }
 
-interface MyGroupType {
+export interface MyGroupType {
   [x: string]: any;
   [index: number]: MyType;
 }

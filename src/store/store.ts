@@ -6,19 +6,11 @@ import createSagaMiddleware from 'redux-saga';
 import { rootReducer } from './reducers/rootReducer';
 import mySaga from './sagas';
 
-// создаем saga мидлвар
 export const history = createBrowserHistory();
 const sagaMiddleware = createSagaMiddleware();
 
-// монтируем его в Store
 export const store = createStore(
-  rootReducer(history), // root reducer with router state
-  compose(
-    applyMiddleware(
-      routerMiddleware(history), // for dispatching history actions
-      sagaMiddleware
-    )
-  )
+  rootReducer(history),
+  compose(applyMiddleware(routerMiddleware(history), sagaMiddleware))
 );
-// затем запускаем сагу
 sagaMiddleware.run(mySaga);

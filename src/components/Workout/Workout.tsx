@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { S } from '../../Global.styles';
-import { Progress } from 'antd';
+
 import ArrowButtonRight from '../../img/Vector2.png';
 import StopButton from '../../img/Pause.png';
 import PlayButton from '../../img/Play.png';
 import ArrowButtonLeft from '../../img/Vector1.png';
 import { indexItemCreator } from '../../store/actionCreators/indexItemCreator';
 import { secondsCreator } from '../../store/actionCreators/secondsCreator';
-import { CONSTANTS, ROUTES } from '../../constants/constants';
+import { CONSTANTS } from '../../constants/constants';
 import { statusTimerCreator } from '../../store/actionCreators/statusTimerCreator';
 import ReactPlayer from 'react-player';
 import { useHistory } from 'react-router';
@@ -16,6 +16,9 @@ import { doneCreator } from '../../store/actionCreators/doneCreator';
 import { getReadyCreator } from '../../store/actionCreators/getReadyCreator';
 import { MyType } from './Workout.types';
 import { Store } from 'antd/lib/form/interface';
+import { HeaderView } from '../HeaderWorkout/HeaderWorkout';
+import { HeaderGetReadyView } from '../HeaderWorkoutGetReady/HeaderWorkoutGetReady';
+import { changeDone } from '../../firebase';
 
 const Workout = () => {
   const dispatch = useDispatch();
@@ -34,7 +37,6 @@ const Workout = () => {
     },
     [dispatch]
   );
-  console.log(states);
 
   const setGetReady = useCallback(() => {
     dispatch(getReadyCreator(!states.isGetReady));
@@ -66,11 +68,11 @@ const Workout = () => {
         states.seconds <= 0 &&
         states.indexItem <= states.router.location.state.length
       ) {
-        console.log(states);
         setIndexItemPlus();
         setGetReady();
         setDone(states.router.location.state[states.indexItem]);
         setSeconds(5);
+
         clearInterval(interval);
       }
     }
@@ -84,6 +86,10 @@ const Workout = () => {
       ) {
         setGetReady();
         setSeconds(states.router.location.state[states.indexItem].duration);
+        changeDone(
+          states?.currentUser?.email,
+          states.router.location.state[states.indexItem]
+        );
         clearInterval(interval);
       }
     }
@@ -109,44 +115,18 @@ const Workout = () => {
               return (
                 <S.Wrapper>
                   <S.H1>Get Ready</S.H1>
-                  <S.WrapperWorkoutHeader>
-                    {states.indexItem ? (
-                      <S.ArrowButton
-                        onClick={() => {
-                          setSeconds(
-                            states.router.location.state[states.indexItem - 1]
-                              .duration
-                          );
-                          setGetReady();
-                          setIndexItemMinus();
-                        }}
-                      >
-                        <img src={ArrowButtonLeft} alt="" />
-                      </S.ArrowButton>
-                    ) : (
-                      <div style={{ width: 74 }}></div>
-                    )}
-                    <Progress
-                      type="circle"
-                      key={index}
-                      width={200}
-                      strokeColor="#1DE9B6"
-                      strokeWidth={6}
-                      percent={states.seconds * 20}
-                      format={() => `${states.seconds}`}
-                    />
-                    <S.ArrowButton
-                      onClick={() => {
-                        setGetReady();
-                        setSeconds(
-                          states.router.location.state[states.indexItem]
-                            .duration
-                        );
-                      }}
-                    >
-                      <img src={ArrowButtonRight} alt="" />
-                    </S.ArrowButton>
-                  </S.WrapperWorkoutHeader>
+                  <HeaderGetReadyView
+                    arrowButtonLeft={ArrowButtonLeft}
+                    index={index}
+                    seconds={states.seconds}
+                    indexItem={states.indexItem}
+                    arrowButtonRight={ArrowButtonRight}
+                    duration={item.duration}
+                    arrayOfExercises={states.router.location.state}
+                    setGetReady={setGetReady}
+                    setSeconds={setSeconds}
+                    setIndexItemMinus={setIndexItemMinus}
+                  />
                   <ReactPlayer
                     playing={
                       states.statusTimer === CONSTANTS.WORKING ? true : false
@@ -173,44 +153,20 @@ const Workout = () => {
             return (
               <S.Wrapper>
                 <S.H1>{item.title}</S.H1>
-                <S.WrapperWorkoutHeader>
-                  <S.ArrowButton
-                    onClick={() => {
-                      setGetReady();
-                      setSeconds(5);
-                    }}
-                  >
-                    <img src={ArrowButtonLeft} alt="" />
-                  </S.ArrowButton>
-
-                  <Progress
-                    type="circle"
-                    key={index}
-                    width={200}
-                    strokeColor="#1DE9B6"
-                    strokeWidth={6}
-                    percent={states.seconds * (100 / item.duration)}
-                    format={() => `${states.seconds}`}
-                  />
-                  <S.ArrowButton
-                    onClick={() => {
-                      if (
-                        states.indexItem ===
-                        states.router.location.state.length - 1
-                      ) {
-                        return history.push({
-                          pathname: ROUTES.COMPLETE_ROUTE,
-                          state: states
-                        });
-                      }
-                      setSeconds(5);
-                      setGetReady();
-                      setIndexItemPlus();
-                    }}
-                  >
-                    <img src={ArrowButtonRight} alt="" />
-                  </S.ArrowButton>
-                </S.WrapperWorkoutHeader>
+                <HeaderView
+                  arrowButtonLeft={ArrowButtonLeft}
+                  index={index}
+                  seconds={states.seconds}
+                  duration={item.duration}
+                  indexItem={states.indexItem}
+                  arrowButtonRight={ArrowButtonRight}
+                  arrLength={states.router.location.state.length - 1}
+                  arrayOfExercises={states.router.location.state}
+                  setGetReady={setGetReady}
+                  setIndexItemPlus={setIndexItemPlus}
+                  setSeconds={setSeconds}
+                  history={history}
+                />
                 <ReactPlayer
                   playing={
                     states.statusTimer === CONSTANTS.WORKING ? true : false

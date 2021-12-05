@@ -3,13 +3,14 @@ import { ACTIONS } from '../../constants/actions';
 import { CONSTANTS } from '../../constants/constants';
 import { connectRouter } from 'connected-react-router';
 import {
+  ActionArrMyType,
   ActionBoolean,
   ActionNumber,
   ActionString
 } from '../actionCreators/actionTypes';
 import { MyType } from '../../components/Workout/Workout.types';
 
-const reducerExersice = (state = {}, action: any) => {
+const reducerExersice = (state = [], action: ActionArrMyType) => {
   switch (action.type) {
     case ACTIONS.SET_EXERCISE:
       return action.value;
@@ -17,7 +18,7 @@ const reducerExersice = (state = {}, action: any) => {
       return state;
   }
 };
-const reducerWarmUp = (state = {}, action: any) => {
+const reducerWarmUp = (state = [], action: ActionArrMyType) => {
   switch (action.type) {
     case ACTIONS.SET_WARM_UP:
       return action.value;
@@ -25,7 +26,7 @@ const reducerWarmUp = (state = {}, action: any) => {
       return state;
   }
 };
-const reducerStretching = (state = {}, action: any) => {
+const reducerStretching = (state = [], action: ActionArrMyType) => {
   switch (action.type) {
     case ACTIONS.SET_STRETCHING:
       return action.value;
@@ -68,6 +69,33 @@ const reducerGetReady = (state = true, action: ActionBoolean) => {
   }
 };
 
+const reducerPassword = (state = '', action: any) => {
+  switch (action.type) {
+    case ACTIONS.SET_PASSWORD:
+      return action.value;
+    default:
+      return state;
+  }
+};
+
+const reducerEmail = (state = '', action: any) => {
+  switch (action.type) {
+    case ACTIONS.SET_EMAIL:
+      return action.value;
+    default:
+      return state;
+  }
+};
+
+const reducerCurrentUser = (state = null, action: any) => {
+  switch (action.type) {
+    case ACTIONS.SET_CURRENT_USER:
+      return action.value;
+    default:
+      return state;
+  }
+};
+
 const reducerArrayOfExercises = (state: MyType[] = [], action: any) => {
   switch (action.type) {
     case ACTIONS.SET_ARRAY_OF_EXERCISES:
@@ -86,6 +114,9 @@ const reducerArrayOfExercises = (state: MyType[] = [], action: any) => {
 
 export const rootReducer = (history: any) =>
   combineReducers({
+    currentUser: reducerCurrentUser,
+    password: reducerPassword,
+    email: reducerEmail,
     router: connectRouter(history),
     exersice: reducerExersice,
     warmUp: reducerWarmUp,

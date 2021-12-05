@@ -2,20 +2,22 @@ import { Result } from 'antd';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { S } from '../../Global.styles';
-import { CheckOutlined } from '@ant-design/icons';
 import { MyType } from '../Workout/Workout.types';
 import { Store } from '../../store/store.types';
+import { useHistory } from 'react-router';
+import { ROUTES } from '../../constants/constants';
 
 const Complete = () => {
   const state = useSelector((state: Store) => state);
+  const history = useHistory();
   return (
     <div>
       <Result
-        icon={<CheckOutlined style={{ color: '#1DE9B6' }} />}
+        icon={<S.CheckOutlined />}
         title="Workout completed!"
         subTitle={`Nice job. You’re done. Here’s the workout summary:
      ${new Date(
-       state.router.location.state.arrayOfExercises.reduce(
+       state.router.location.state.reduce(
          (acc: number, current: MyType) => (acc += current.duration),
          0
        ) * 1000
@@ -23,7 +25,9 @@ const Complete = () => {
        .toISOString()
        .substr(14, 5)}`}
         extra={
-          <S.ButtonStartWorkout onClick={() => console.log(state)}>
+          <S.ButtonStartWorkout
+            onClick={() => history.push(ROUTES.OVERVIEW_ROUTE)}
+          >
             Save & Continue
           </S.ButtonStartWorkout>
         }

@@ -1,6 +1,9 @@
 import styled from 'styled-components';
-
+import { CheckOutlined } from '@ant-design/icons';
 export const S = {
+  CheckOutlined: styled(CheckOutlined)`
+    color: #1de9b6 !important;
+  `,
   Calendar: styled.div`
     display: flex;
     flex-direction: column;
@@ -8,6 +11,26 @@ export const S = {
     justify-content: center;
     width: 90vw;
     height: 100vh;
+  `,
+  EmptyDiv: styled.div`
+    width: 74px;
+  `,
+  AddActivity: styled.button`
+    border: none;
+    width: 30%;
+    padding: 1vh 0;
+    margin: 1vh 0;
+    cursor: pointer;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: center;
+    text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
+    border-radius: 8px;
+    background: #aa00ff;
+    color: #fff;
   `,
   Wrapper: styled.div`
     display: flex;

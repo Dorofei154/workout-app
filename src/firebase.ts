@@ -3,20 +3,19 @@ import { initializeApp } from 'firebase/app';
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  signOut,
   signInWithEmailAndPassword
 } from 'firebase/auth';
 
 import {
   getFirestore,
-  collection,
   setDoc,
   doc,
+  updateDoc,
   getDocs,
-  deleteDoc,
-  updateDoc
+  collection,
+  getDoc
 } from 'firebase/firestore';
-import { MyType } from './components/Workout/Workout.types';
+import { MyGroupType, MyTypeWithout } from './components/Workout/Workout.types';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -31,66 +30,88 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth(app);
 
-const deleteTodo = async (e: string, email: string) => {
-  return deleteDoc(doc(db, email, e));
-};
-
-const addTodo = async (
-  text: string,
-  email: string,
-  date: string,
-  header: string,
-  index: string
-) => {
-  const dateRes = new Date(date);
-  await setDoc(doc(db, email, index), {
-    header,
-    res: text,
-    done: false,
-    month: dateRes.getMonth(),
-    date: dateRes.getDate()
+const getCollection = async (email: string, title: string) => {
+  const docSnap: any = await getDoc(doc(db, email.toLocaleLowerCase(), title));
+  const arr: MyTypeWithout[] = [];
+  docSnap.data().exercises.forEach((element: any) => {
+    arr.push(element);
   });
+  return arr;
 };
 
-const addExersice = async (e: MyType) => {
-  const { id, photo, title, duration, description, video } = e;
-  await setDoc(doc(db, 'Exercises', String(e.id)), {
-    id,
-    photo,
+const getArrExercise = async (email: string) => {
+  const querySnapshot: any = await getDocs(
+    collection(db, email.toLocaleLowerCase())
+  );
+  const arr: any[] = [];
+  querySnapshot.forEach((doc: any) => {
+    arr.push(doc.data().exercises);
+  });
+  return arr.flat();
+};
+
+const addNewExersice = async (email: string, e: MyTypeWithout) => {
+  const { title, duration, description, select } = e;
+  const docSnap: any = await getDoc(
+    doc(db, email.toLocaleLowerCase(), String(select))
+  );
+  const arr: MyTypeWithout[] = [];
+  docSnap.data().exercises.forEach((element: any) => {
+    arr.push(element);
+  });
+  arr.push({
+    id: String(Date.now()),
     title,
     duration,
     description,
-    video,
     done: false
   });
+  if (select) {
+    await setDoc(doc(db, email, select), { exercises: arr });
+  }
 };
 
-const changeDone = async (e: any) => {
-  await updateDoc(doc(db, 'Exercises', e.id), {
-    done: e.done
+const addExersice = async (
+  email: string,
+  e: {
+    title: string;
+    exercises: MyGroupType;
+    muscle_group: { name: string; photo: string };
+  },
+  titles: string
+) => {
+  const { exercises } = e;
+  const docSnap = await getDoc(doc(db, email.toLowerCase(), titles));
+  if (docSnap.exists()) {
+    return;
+  }
+  await setDoc(doc(db, email.toLocaleLowerCase(), titles), {
+    exercises
   });
 };
 
-const getTodo = async (email: string) => {
-  const querySnapshot: any = await getDocs(collection(db, email));
-  const arr: {
-    id: string;
-    data: {
-      id: string;
-      text: string;
-      header: string;
-      date: moment.Moment | number;
-      done: boolean;
-      month: moment.Moment | number;
-    };
-  }[] = [];
-  querySnapshot.forEach((doc: any) => {
-    arr.push({
-      id: doc.id,
-      data: doc.data()
+const changeDone: any = async (email: string, e: any, title = 'Exercise') => {
+  const docSnapExercise: any = await getDoc(doc(db, email, title));
+  const arr: MyTypeWithout[] = [];
+  docSnapExercise.data().exercises.forEach((element: any) => {
+    arr.push(element);
+  });
+
+  if (arr.map((item: any) => item.id).includes(e.id)) {
+    await updateDoc(doc(db, email.toLowerCase(), title), {
+      exercises: arr.map((item) => {
+        if (item.id === e.id) {
+          return { ...item, done: true };
+        }
+        return item;
+      })
     });
-  });
-  return arr;
+    return;
+  }
+  if (title === 'Stretching') {
+    return changeDone(email, e, 'Warm up');
+  }
+  return changeDone(email, e, 'Stretching');
 };
 
 const signup = (email: string, password: string) => {
@@ -99,18 +120,14 @@ const signup = (email: string, password: string) => {
 const login = async (email: string, password: string) => {
   return signInWithEmailAndPassword(auth, email, password);
 };
-const logout = () => {
-  return signOut(auth);
-};
 
 export {
-  deleteTodo,
+  getArrExercise,
   auth,
+  getCollection,
   addExersice,
-  getTodo,
-  logout,
   signup,
   login,
-  addTodo,
+  addNewExersice,
   changeDone
 };
