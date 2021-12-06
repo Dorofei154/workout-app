@@ -21,6 +21,7 @@ const HeaderWorkoutGetReady = ({
     <S.WrapperWorkoutHeader>
       {indexItem ? (
         <S.ArrowButton
+        //TODO onClick должен приходить сверху
           onClick={() => {
             setSeconds(arrayOfExercises[indexItem - 1].duration);
             setGetReady();
@@ -41,7 +42,9 @@ const HeaderWorkoutGetReady = ({
         percent={seconds * 20}
         format={() => `${seconds}`}
       />
+
       <S.ArrowButton
+      //TODO onClick должен приходить сверху
         onClick={() => {
           setGetReady();
           setSeconds(arrayOfExercises[indexItem].duration);

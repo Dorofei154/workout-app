@@ -16,7 +16,7 @@ function* FetchApi() {
   );
   const data: SagasProps = yield user.json();
   const email: string = yield select(getEmail);
-
+//TODO Выглядит не понятно, и страшно исправь, можешь добавить функцию addExersiceS чтоб там можно было массивом кидать а не так
   yield addExersice(
     email,
     data.data.questions[0],
@@ -32,7 +32,7 @@ function* FetchApi() {
     data.data.questions[2],
     data.data.questions[2].title
   );
-
+// TODO эту функцию можно вынести отсюда
   const handleGetExercises = async (title: string) => {
     const res = await getCollection(email, title);
     return res;
@@ -52,6 +52,7 @@ function* FetchApi() {
   yield put(warmUpCreator(resWarm));
   yield put(exerciseCreator(resExercise));
   yield put(stretchingCreator(resStretching));
+  //TODO зачем складывать в redux store promise, он тут его и не возвращает скорее всего ?
   const todos: Promise<MyTypeWithout[]> = yield call(getArrExercise, email);
   yield put(arrayOfExercisesCreator(todos));
 }

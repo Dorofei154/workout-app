@@ -107,6 +107,7 @@ const Workout = () => {
 
   return (
     <S.Wrapper>
+      {/*TODO states.router.location.state  избався от таких длинных цепочек,  вынеси все if из ретурн и сдлай несколько return по условию( в компоненте)*/}
       {states.router.location.state.map(
         // eslint-disable-next-line array-callback-return
         (item: MyType, index: string) => {
