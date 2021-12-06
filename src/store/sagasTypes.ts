@@ -1,3 +1,5 @@
+import { MyType } from '../components/Workout/Workout.types';
+
 export interface Exersices {
   id: number;
   photo: string;
@@ -8,8 +10,8 @@ export interface Exersices {
 }
 
 interface MyGroupType {
-  [x: string]: any;
-  [index: number]: Exersices;
+  [x: string]: MyType;
+  [index: number]: MyType;
 }
 
 export interface SagasProps {

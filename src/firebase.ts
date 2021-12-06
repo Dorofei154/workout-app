@@ -13,7 +13,10 @@ import {
   updateDoc,
   getDocs,
   collection,
-  getDoc
+  getDoc,
+  DocumentSnapshot,
+  DocumentData,
+  QuerySnapshot
 } from 'firebase/firestore';
 import { MyGroupType, MyTypeWithout } from './components/Workout/Workout.types';
 
@@ -31,20 +34,24 @@ const db = getFirestore();
 const auth = getAuth(app);
 
 const getCollection = async (email: string, title: string) => {
-  const docSnap: any = await getDoc(doc(db, email.toLocaleLowerCase(), title));
+  const docSnap: DocumentSnapshot<DocumentData> = await getDoc(
+    doc(db, email.toLocaleLowerCase(), title)
+  );
   const arr: MyTypeWithout[] = [];
-  docSnap.data().exercises.forEach((element: MyTypeWithout) => {
+
+  docSnap?.data()?.exercises.forEach((element: MyTypeWithout) => {
     arr.push(element);
   });
+
   return arr;
 };
 
 const getArrExercise = async (email: string) => {
-  const querySnapshot: any = await getDocs(
+  const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(
     collection(db, email.toLocaleLowerCase())
   );
   const arr: MyTypeWithout[] = [];
-  querySnapshot.forEach((doc: any) => {
+  querySnapshot.forEach((doc: DocumentData) => {
     arr.push(doc.data().exercises);
   });
   return arr.flat();
@@ -52,11 +59,11 @@ const getArrExercise = async (email: string) => {
 
 const addNewExersice = async (email: string, e: MyTypeWithout) => {
   const { title, duration, description, select } = e;
-  const docSnap: any = await getDoc(
+  const docSnap: DocumentSnapshot<DocumentData> = await getDoc(
     doc(db, email.toLocaleLowerCase(), String(select))
   );
   const arr: MyTypeWithout[] = [];
-  docSnap.data().exercises.forEach((element: MyTypeWithout) => {
+  docSnap?.data()?.exercises.forEach((element: MyTypeWithout) => {
     arr.push(element);
   });
   arr.push({
@@ -124,9 +131,11 @@ const changeDone: (
   e: MyTypeWithout,
   title = 'Exercise'
 ) => {
-  const docSnapExercise: any = await getDoc(doc(db, email, title));
+  const docSnapExercise: DocumentSnapshot<DocumentData> = await getDoc(
+    doc(db, email, title)
+  );
   const arr: MyTypeWithout[] = [];
-  docSnapExercise.data().exercises.forEach((element: MyTypeWithout) => {
+  docSnapExercise?.data()?.exercises.forEach((element: MyTypeWithout) => {
     arr.push(element);
   });
 

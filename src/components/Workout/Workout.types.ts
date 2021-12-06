@@ -23,7 +23,7 @@ export interface ExercisesWithDone extends MyType {
 }
 
 export interface MyGroupType {
-  [x: string]: any;
+  [x: string]: MyType;
   [index: number]: MyType;
 }
 
