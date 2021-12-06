@@ -1,11 +1,11 @@
 import { User } from 'firebase/auth';
-import { MyType } from '../components/Workout/Workout.types';
+import { MyType, MyTypeWithout } from '../components/Workout/Workout.types';
 
 export interface Store {
   router: any;
-  exersice: any;
-  warmUp: any;
-  stretching: any;
+  exersice: MyTypeWithout[];
+  warmUp: MyTypeWithout[];
+  stretching: MyTypeWithout[];
   email: string;
   currentUser: User | null | undefined;
   password: string;

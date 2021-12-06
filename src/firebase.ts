@@ -33,7 +33,7 @@ const auth = getAuth(app);
 const getCollection = async (email: string, title: string) => {
   const docSnap: any = await getDoc(doc(db, email.toLocaleLowerCase(), title));
   const arr: MyTypeWithout[] = [];
-  docSnap.data().exercises.forEach((element: any) => {
+  docSnap.data().exercises.forEach((element: MyTypeWithout) => {
     arr.push(element);
   });
   return arr;
@@ -43,7 +43,7 @@ const getArrExercise = async (email: string) => {
   const querySnapshot: any = await getDocs(
     collection(db, email.toLocaleLowerCase())
   );
-  const arr: any[] = [];
+  const arr: MyTypeWithout[] = [];
   querySnapshot.forEach((doc: any) => {
     arr.push(doc.data().exercises);
   });
@@ -56,7 +56,7 @@ const addNewExersice = async (email: string, e: MyTypeWithout) => {
     doc(db, email.toLocaleLowerCase(), String(select))
   );
   const arr: MyTypeWithout[] = [];
-  docSnap.data().exercises.forEach((element: any) => {
+  docSnap.data().exercises.forEach((element: MyTypeWithout) => {
     arr.push(element);
   });
   arr.push({
@@ -90,14 +90,22 @@ const addExersice = async (
   });
 };
 
-const changeDone: any = async (email: string, e: any, title = 'Exercise') => {
+const changeDone: (
+  email: string,
+  e: MyTypeWithout,
+  title?: string | undefined
+) => Promise<undefined> = async (
+  email: string,
+  e: MyTypeWithout,
+  title = 'Exercise'
+) => {
   const docSnapExercise: any = await getDoc(doc(db, email, title));
   const arr: MyTypeWithout[] = [];
-  docSnapExercise.data().exercises.forEach((element: any) => {
+  docSnapExercise.data().exercises.forEach((element: MyTypeWithout) => {
     arr.push(element);
   });
 
-  if (arr.map((item: any) => item.id).includes(e.id)) {
+  if (arr.map((item: MyTypeWithout) => item.id).includes(e.id)) {
     await updateDoc(doc(db, email.toLowerCase(), title), {
       exercises: arr.map((item) => {
         if (item.id === e.id) {

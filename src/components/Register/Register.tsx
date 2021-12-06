@@ -1,3 +1,4 @@
+import { Store } from 'rc-field-form/lib/interface';
 import { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -9,11 +10,11 @@ import { RegisterView } from '../views/Register/Register';
 
 const RegisterContainerComponent = () => {
   const dispatch = useDispatch();
-  const state = useSelector((state: any) => state);
-  const setPassword = (e: any) => {
+  const state = useSelector((state: Store) => state);
+  const setPassword = (e: string) => {
     dispatch(passwordCreator(e));
   };
-  const setEmail = (e: any) => {
+  const setEmail = (e: string) => {
     dispatch(emailCreator(e));
   };
 

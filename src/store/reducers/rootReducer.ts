@@ -5,10 +5,13 @@ import { connectRouter } from 'connected-react-router';
 import {
   ActionArrMyType,
   ActionBoolean,
+  ActionCurrentUser,
+  ActionMyType,
   ActionNumber,
   ActionString
 } from '../actionCreators/actionTypes';
 import { MyType } from '../../components/Workout/Workout.types';
+import { RouteComponentProps } from 'react-router';
 
 const reducerExersice = (state = [], action: ActionArrMyType) => {
   switch (action.type) {
@@ -69,7 +72,7 @@ const reducerGetReady = (state = true, action: ActionBoolean) => {
   }
 };
 
-const reducerPassword = (state = '', action: any) => {
+const reducerPassword = (state = '', action: ActionString) => {
   switch (action.type) {
     case ACTIONS.SET_PASSWORD:
       return action.value;
@@ -78,7 +81,7 @@ const reducerPassword = (state = '', action: any) => {
   }
 };
 
-const reducerEmail = (state = '', action: any) => {
+const reducerEmail = (state = '', action: ActionString) => {
   switch (action.type) {
     case ACTIONS.SET_EMAIL:
       return action.value;
@@ -87,7 +90,7 @@ const reducerEmail = (state = '', action: any) => {
   }
 };
 
-const reducerCurrentUser = (state = null, action: any) => {
+const reducerCurrentUser = (state = null, action: ActionCurrentUser) => {
   switch (action.type) {
     case ACTIONS.SET_CURRENT_USER:
       return action.value;
@@ -96,12 +99,15 @@ const reducerCurrentUser = (state = null, action: any) => {
   }
 };
 
-const reducerArrayOfExercises = (state: MyType[] = [], action: any) => {
+const reducerArrayOfExercises = (
+  state: MyType[] = [],
+  action: ActionMyType
+) => {
   switch (action.type) {
     case ACTIONS.SET_ARRAY_OF_EXERCISES:
       return action.value;
     case ACTIONS.SET_DONE:
-      return state.map((item: any) => {
+      return state.map((item: MyType) => {
         if (item.id === action.value.id) {
           return { ...item, done: true };
         }
@@ -112,7 +118,7 @@ const reducerArrayOfExercises = (state: MyType[] = [], action: any) => {
   }
 };
 
-export const rootReducer = (history: any) =>
+export const rootReducer = (history: RouteComponentProps['history']) =>
   combineReducers({
     currentUser: reducerCurrentUser,
     password: reducerPassword,

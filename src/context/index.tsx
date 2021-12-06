@@ -5,12 +5,13 @@ import { сurrentUserCreator } from '../store/actionCreators/сurrentUserCreator
 import { auth, login, signup } from '../firebase';
 import { LoginContext } from './context';
 import { IProviderProps } from './types';
+import { Store } from '../store/store.types';
 
 function LoginProviderComponent({ children }: IProviderProps) {
   const dispatch = useDispatch();
-  const state = useSelector((state: any) => state);
+  const state = useSelector((state: Store) => state);
   const setCurrentUser = useCallback(
-    (e: any) => {
+    (e: User | null | undefined) => {
       dispatch(сurrentUserCreator(e));
     },
     [dispatch]

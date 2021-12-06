@@ -1,3 +1,4 @@
+import { User } from '@firebase/auth';
 import { MyType } from '../../components/Workout/Workout.types';
 
 export interface ActionNumber {
@@ -23,4 +24,14 @@ export interface ActionArrNumber {
 export interface ActionArrMyType {
   type: string;
   value: MyType[];
+}
+
+export interface ActionMyType {
+  type: string;
+  value: MyType;
+}
+
+export interface ActionCurrentUser {
+  type: string;
+  value: User | null | undefined;
 }
