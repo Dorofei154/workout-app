@@ -71,6 +71,31 @@ const addNewExersice = async (email: string, e: MyTypeWithout) => {
   }
 };
 
+const addExersices = async (
+  email: string,
+  arr: {
+    title: string;
+    exercises: MyGroupType;
+    muscle_group: {
+      name: string;
+      photo: string;
+    };
+  }[]
+) => {
+  arr.forEach(
+    (item: {
+      title: string;
+      exercises: MyGroupType;
+      muscle_group: {
+        name: string;
+        photo: string;
+      };
+    }) => {
+      addExersice(email, item, item.title);
+    }
+  );
+};
+
 const addExersice = async (
   email: string,
   e: {
@@ -132,6 +157,7 @@ const login = async (email: string, password: string) => {
 export {
   getArrExercise,
   auth,
+  addExersices,
   getCollection,
   addExersice,
   signup,
