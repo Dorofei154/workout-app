@@ -16,6 +16,7 @@ const RegisterViewComponent = ({
   handleRegistration,
   text
 }: IProps) => {
+ 
   return (
     <S.Container>
       <EnterForm
@@ -30,6 +31,7 @@ const RegisterViewComponent = ({
       <FormButton
         text={text}
         handleFunction={() => {
+           //TODO если view то логики быть не должно
           handleRegistration(email, password);
           history.push(ROUTES.LOGIN_ROUTE);
         }}
