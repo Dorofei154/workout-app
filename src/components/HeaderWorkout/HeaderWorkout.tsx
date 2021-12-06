@@ -3,7 +3,7 @@ import React, { memo } from 'react';
 import { CONSTANTS, ROUTES } from '../../constants/constants';
 import { S } from '../../Global.styles';
 import { IProps } from './HeaderWorkout.types';
-
+//TODO Сгруппируй все хедеры в одну папку headers>view в папке components, и сделай их всех view
 const HeaderViewContainer = ({
   arrowButtonLeft,
   index,
@@ -21,6 +21,7 @@ const HeaderViewContainer = ({
   return (
     <S.WrapperWorkoutHeader>
       <S.ArrowButton
+      //TODO onClick должен приходить сверху
         onClick={() => {
           setGetReady();
           setSeconds(5);
@@ -39,6 +40,7 @@ const HeaderViewContainer = ({
         format={() => `${seconds}`}
       />
       <S.ArrowButton
+      //TODO onClick должен приходить сверху
         onClick={() => {
           if (indexItem === arrLength) {
             return history.push({
